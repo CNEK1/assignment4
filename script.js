@@ -18,10 +18,12 @@ const appendNumber = (number) => {
 };
 
 const chooseOperation = (op) => {
-  if (currentOperand === '') return;
-  if (previousOperand !== '') {
+  if (!currentOperand) return;
+
+  if (previousOperand) {
     operate();
   }
+
   operation = op;
   previousOperand = currentOperand;
   currentOperand = '';
@@ -40,9 +42,6 @@ const multiply = (num1, num2) => {
 }
 
 const divide=(num1, num2) => {
-  if (num2 === 0) {
-    return 'Error: Cannot divide by zero';
-  }
   return num1 / num2;
 }
 
@@ -51,22 +50,19 @@ const operate = () => {
   const num1 = parseFloat(previousOperand);
   const num2 = parseFloat(currentOperand);
   if (isNaN(num1) || isNaN(num2)) return;
-  switch (operation) {
-    case '+':
-      computation = add(num1,num2);
-      break;
-    case '-':
-      computation = subtract(num1,num2);
-      break;
-    case '*':
-      computation = multiply(num1,num2);
-      break;
-    case '÷':
-      computation = divide(num1,num2);
-      break;
-    default:
-      return;
-  }
+  
+  computation = operation === '+'
+    ? add(num1,num2)
+    : operation === '-'
+    ? subtract(num1,num2)
+    : operation === '*'
+    ? multiply(num1,num2)
+    : operation === '÷'
+    ? divide(num1,num2)
+    : undefined;
+  
+  if (computation === undefined) return;
+
   currentOperand = computation;
   operation = undefined;
   previousOperand = '';
